@@ -1,6 +1,6 @@
 # LeaderboardService system architecture and business process implementation design specifications
 
-## 1. Background and Objectives([A stress test report is attached at the bottom.](#10-stress-test-report))
+## 1. Background and Objectives(A stress test report is attached at the end of the article.)
 
 ### 1.1 Backgroud
 * Develop a small HTTP-based back-end service which stores andprovides scores and ranks for customers.
@@ -244,7 +244,7 @@ customerRankDic.TryGetValue
 * Persistent data source（Dump / Load）
 
 ---
-## 10. Stress test report {#10-stress-test-report}
+## 10. Stress test report
 
 ### 10.1 Stress testing environment and resource conditions
 * Server configuration: 6C16G
