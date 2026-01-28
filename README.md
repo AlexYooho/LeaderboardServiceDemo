@@ -244,7 +244,7 @@ customerRankDic.TryGetValue
 * Persistent data source（Dump / Load）
 
 ---
-## 10. Stress test report {#stress-test-report}
+## 10. Stress test report{#stress-test-report}
 
 ### 10.1 Stress testing environment and resource conditions
 * Server configuration: 6C16G
