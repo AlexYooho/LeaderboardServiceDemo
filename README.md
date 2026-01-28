@@ -252,16 +252,18 @@ customerRankDic.TryGetValue
 
 ### 10.2 Single interface stress test results
 * POST /customer/{customerid}/score/{score}
-
+![POST /customer/{customerid}/score/{score} modify score](Images/ModifyScore.png)
 
 * GET /leaderboard?start={start}&end={end}
-
+![POST /customer/{customerid}/score/{score} query by rank](Images/QueryByRank.png)
 
 * GET /leaderboard/{customerid}?high={high}&low={low}
-
+![POST /customer/{customerid}/score/{score} query by customerId](Images/QueryByCustomerId.png)
 
 ### 10.3 Mixed pressure test results
 
+![POST /customer/{customerid}/score/{score} modify score and query by customerId](Images/Mix1.png)
 
+![POST /customer/{customerid}/score/{score} modify score and query by customerId](Images/Mix2.png)
 
 ---
