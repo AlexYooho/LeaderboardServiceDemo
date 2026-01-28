@@ -251,19 +251,21 @@ customerRankDic.TryGetValue
 * Samples:1000000(1000t,1000times)
 
 ### 10.2 Single interface stress test results
-* POST /customer/{customerid}/score/{score}
-![POST /customer/{customerid}/score/{score} modify score](Images/ModifyScore.png)
+* POST /customer/1/score/100
 
-* GET /leaderboard?start={start}&end={end}
-![POST /customer/{customerid}/score/{score} query by rank](Images/QueryByRank.png)
+![modify score](Images/ModifyScore.png)
+
+* GET /leaderboard?start=1&end=100
+
+![query by rank](Images/QueryByRank.png)
 
 * GET /leaderboard/{customerid}?high={high}&low={low}
-![POST /customer/{customerid}/score/{score} query by customerId](Images/QueryByCustomerId.png)
+
+![query by rank](Images/QueryByCustomerId.png)
 
 ### 10.3 Mixed pressure test results
+![modify score and query by customerId](Images/Mix1.png)
 
-![POST /customer/{customerid}/score/{score} modify score and query by customerId](Images/Mix1.png)
-
-![POST /customer/{customerid}/score/{score} modify score and query by customerId](Images/Mix2.png)
+![modify score and query by customerId](Images/Mix2.png)
 
 ---
