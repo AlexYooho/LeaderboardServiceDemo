@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LeaderboardApi/LeaderboardApi.csproj" />
+  <Project Path="LeaderboardModel/LeaderboardModel.csproj" />
+  <Project Path="LeaderboardService/LeaderboardService.csproj" />
+</Solution>
