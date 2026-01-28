@@ -263,7 +263,7 @@ customerRankDic.TryGetValue
 
 ![query by rank](Images/QueryByCustomerId.png)
 
-### 10.3 Mixed pressure test results
+### 10.3 Mixed stress test results
 ![modify score and query by customerId](Images/Mix1.png)
 
 ![modify score and query by customerId](Images/Mix2.png)
