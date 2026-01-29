@@ -22,7 +22,7 @@
         /// </summary>
         public int[] intervalSpanCount;
 
-        public NodeInfo(int layer, ulong id = 0, long score = 0)
+        public NodeInfo(ulong id = 0, long score = 0, int layer = 32)
         {
             customerId = id;
             this.score = score;

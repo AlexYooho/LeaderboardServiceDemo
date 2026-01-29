@@ -43,13 +43,17 @@ namespace LeaderboardService
                     _skipList.DeleteNode(node);
                     node.score = Math.Max(0, node.score + modifyScore);
                     if (node.score > 0)
+                    {
                         _skipList.AddNode(node);
+                    }
                     else
+                    {
                         _customerNodeInfoDic.TryRemove(customerId, out _);
+                    }
                 }
                 else if (modifyScore > 0)
                 {
-                    var newNode = new NodeInfo(32, customerId, modifyScore);
+                    var newNode = new NodeInfo(customerId, modifyScore);
                     _customerNodeInfoDic[customerId] = newNode;
                     _skipList.AddNode(newNode);
                 }
@@ -147,16 +151,6 @@ namespace LeaderboardService
                 var currentCustomerRank = _skipList.GetCurrentNodeRanking(node);
                 var start = Math.Max(1, currentCustomerRank - (int)high);
                 var end = currentCustomerRank + (int)low;
-
-                //var list = new List<CustomerLeaderboardInfoModel>();
-                //int r = start;
-                //foreach (var n in _skipList.GetRangeRanking(start, end - start + 1))
-                //{
-                //    list.Add(new CustomerLeaderboardInfoModel(
-                //    n.customerId,
-                //    n.score / (double)_scorePrecision,
-                //    r++));
-                //}
 
                 int rank = (int)start;
                 var list = _skipList.GetRangeRanking(start, end - start + 1)

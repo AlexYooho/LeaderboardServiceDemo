@@ -12,7 +12,7 @@
         private readonly Random _random = Random.Shared;
 
         // head
-        private readonly NodeInfo _head = new(_maxLayer);
+        private readonly NodeInfo _head = new(layer: _maxLayer);
 
         // init layer
         private int _initLayer = 1;
