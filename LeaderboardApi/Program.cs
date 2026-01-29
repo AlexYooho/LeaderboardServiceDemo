@@ -11,7 +11,7 @@ builder.WebHost.ConfigureKestrel(options =>
 
 // Add services to the container.
 //builder.Services.AddSingleton<ILeaderboardService, LeaderboardServiceImpl>();
-builder.Services.AddSingleton<ILeaderboardService, LeaderboardServiceV3Impl>();
+builder.Services.AddSingleton<ILeaderboardService, LeaderboardServiceV4Impl>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
