@@ -57,7 +57,7 @@ namespace LeaderboardService
                     _customerNodeInfoDic[customerId] = newNode;
                     _skipList.AddNode(newNode);
                 }
-
+                result.SetSuccessful();
                 result.Data = _customerNodeInfoDic.TryGetValue(customerId, out var n) ? n.score / (double)_scorePrecision : 0;
             }
             catch (Exception ex)
@@ -70,7 +70,6 @@ namespace LeaderboardService
                 _lock.ExitWriteLock();
             }
 
-            result.SetSuccessful();
             return result;
         }
 
