@@ -1,4 +1,5 @@
 ﻿using LeaderboardModel;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Concurrent;
 
 namespace LeaderboardService
@@ -23,6 +24,28 @@ namespace LeaderboardService
 
         // read writer lock
         private readonly ReaderWriterLockSlim _lock = new();
+
+        // cache
+        private readonly IMemoryCache _cache;
+
+        private const string _rangeRankCacheKeyPrefix = "range:rank:";
+        private const string _userRangeRankCacheKeyPrefix = "user:range:rank:";
+
+        // cache expiration time
+        private readonly TimeSpan _cacheExpirationTime = TimeSpan.FromSeconds(5);
+
+        private readonly ConcurrentDictionary<ulong, ConcurrentBag<string>> _userCacheKeyDic = new();
+
+        private readonly ConcurrentDictionary<ulong, ConcurrentBag<string>> _rangeRankCacheKeyDic = new();
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="cache"></param>
+        public LeaderboardServiceV4Impl(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
 
         /// <summary>
         /// modify customer score
@@ -57,6 +80,10 @@ namespace LeaderboardService
                     _customerNodeInfoDic[customerId] = newNode;
                     _skipList.AddNode(newNode);
                 }
+
+                // clear cache
+                ClearCache(customerId);
+
                 result.SetSuccessful();
                 result.Data = _customerNodeInfoDic.TryGetValue(customerId, out var n) ? n.score / (double)_scorePrecision : 0;
             }
@@ -95,6 +122,15 @@ namespace LeaderboardService
                 return result;
             }
 
+            // hotsopt ranking query
+            var cacheKey = $"{_rangeRankCacheKeyPrefix}{start}:{queryRangeCnt}";
+            if (_cache.TryGetValue(cacheKey, out CustomerLeaderboardInfoModel[] cachedList))
+            {
+                result.Data = cachedList;
+                result.SetSuccessful();
+                return result;
+            }
+
             _lock.EnterReadLock();
             try
             {
@@ -105,6 +141,9 @@ namespace LeaderboardService
                         n.score / (double)_scorePrecision,
                         rank++))
                     .ToArray();
+
+                _cache.Set(cacheKey, list, _cacheExpirationTime);
+                _rangeRankCacheKeyDic.AddOrUpdate(0UL, _ => new ConcurrentBag<string> { cacheKey }, (_, x) => { x.Add(cacheKey); return x; });
 
                 result.Data = list;
                 result.SetSuccessful();
@@ -144,6 +183,15 @@ namespace LeaderboardService
                 return result;
             }
 
+            // hotsopt ranking query
+            var cacheKey = $"{_userRangeRankCacheKeyPrefix}{customerId}:{high}:{low}";
+            if (_cache.TryGetValue(cacheKey, out CustomerLeaderboardInfoModel[] cachedList))
+            {
+                result.Data = cachedList;
+                result.SetSuccessful();
+                return result;
+            }
+
             _lock.EnterReadLock();
             try
             {
@@ -159,6 +207,9 @@ namespace LeaderboardService
                         rank++))
                     .ToArray();
 
+                _cache.Set(cacheKey, list, _cacheExpirationTime);
+                _userCacheKeyDic.AddOrUpdate(customerId, _ => new ConcurrentBag<string> { cacheKey }, (_, x) => { x.Add(cacheKey); return x; });
+
                 result.Data = list;
                 result.SetSuccessful();
             }
@@ -173,6 +224,29 @@ namespace LeaderboardService
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// clear cache
+        /// </summary>
+        /// <param name="customerId"></param>
+        private void ClearCache(ulong customerId)
+        {
+            if (_rangeRankCacheKeyDic.TryRemove(0UL, out var rangeKeys))
+            {
+                foreach (var key in rangeKeys.ToArray())
+                {
+                    _cache.Remove(key);
+                }
+            }
+
+            if (_userCacheKeyDic.TryRemove(customerId, out var userKeys))
+            {
+                foreach (var key in userKeys.ToArray())
+                {
+                    _cache.Remove(key);
+                }
+            }
         }
     }
 }
